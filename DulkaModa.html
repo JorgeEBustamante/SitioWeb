@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dulka Joyería</title>
+
+<style>
+    body{
+        margin:0;
+        font-family: 'Poppins', sans-serif;
+        background:#fafafa;
+        color:#222;
+    }
+
+    /* ===== HERO ===== */
+    header{
+        background:url("TU_IMAGEN_DE_PORTADA.jpg") center/cover no-repeat;
+        height:65vh;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        align-items:center;
+        text-align:center;
+        color:white;
+        padding:20px;
+    }
+    header h1{
+        font-size:3rem;
+        letter-spacing:2px;
+        margin:0;
+    }
+    header p{
+        font-size:1.2rem;
+        width:70%;
+        max-width:600px;
+    }
+    .btn-primary{
+        background:#d4af37;
+        padding:12px 26px;
+        margin-top:18px;
+        color:white;
+        border-radius:5px;
+        text-decoration:none;
+        font-weight:bold;
+        transition:.3s;
+    }
+    .btn-primary:hover{ background:#b38c23; }
+
+    /* ===== LOGOS ===== */
+    .logos{
+        display:flex;
+        justify-content:center;
+        gap:50px;
+        padding:50px 20px;
+        flex-wrap:wrap;
+    }
+    .logos img{
+        width:160px;
+        filter:drop-shadow(1px 1px 6px rgba(0,0,0,.1));
+    }
+
+    /* ===== CATALOGO ===== */
+    .catalogo{
+        text-align:center;
+        padding:60px 20px;
+    }
+    .grid{
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+        gap:22px;
+        width:90%;
+        max-width:1200px;
+        margin:auto;
+    }
+    .producto{
+        background:white;
+        border-radius:12px;
+        padding:15px;
+        box-shadow:0 3px 8px rgba(0,0,0,.08);
+        transition:.3s;
+    }
+    .producto:hover{ transform:translateY(-5px); }
+    .producto img{
+        width:100%;
+        border-radius:10px;
+    }
+    .producto h3{ margin:10px 0; font-weight:500; }
+    .producto p{ font-size:.9rem; color:#555; }
+    .precio{ font-size:1rem; font-weight:bold; color:#d4af37; }
+
+    /* ===== FOOTER ===== */
+    footer{
+        background:#111;
+        color:#fff;
+        text-align:center;
+        padding:25px;
+        margin-top:40px;
+    }
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Dulka</h1>
+    <p>Eleva tu brillo. Cada pieza cuenta una historia.</p>
+    <a href="#catalogo" class="btn-primary">Ver Catálogo</a>
+</header>
+
+<section class="logos">
+    <img src="LOGO1.png">
+    <img src="LOGO2.png">
+    <img src="LOGO3.png">
+</section>
+
+<section id="catalogo" class="catalogo">
+    <h2>✨ Catálogo de Joyería</h2><br>
+
+    <div class="grid">
+
+        <div class="producto">
+            <img src="producto1.jpg">
+            <h3>Collar Luna Minimalista</h3>
+            <p>Acero inoxidable | Baño de oro</p>
+            <span class="precio">$280 MXN</span>
+        </div>
+
+        <div class="producto">
+            <img src="producto2.jpg">
+            <h3>Aros Dorados Clásicos</h3>
+            <p>Todoterreno — ideal para diario</p>
+            <span class="precio">$240 MXN</span>
+        </div>
+
+        <div class="producto">
+            <img src="producto3.jpg">
+            <h3>Pulsera Infinity</h3>
+            <p>Significa unión y eternidad</p>
+            <span class="precio">$350 MXN</span>
+        </div>
+
+    </div>
+</section>
+
+<footer>
+    © 2025 Dulka Joyería — Elegancia accesible  
+</footer>
+
+</body>
+</html>
