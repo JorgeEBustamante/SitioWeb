@@ -246,7 +246,7 @@
 
   // Checkout via WhatsApp: compone mensaje con items
   document.getElementById("checkout").onclick = () => {
-    const phone = "5216623187789"; // pon aquí tu número con lada (521 = México + número)
+    const phone = "5216622571346"; // pon aquí tu número con lada (521 = México + número)
     const items = Object.values(cart).map(e => `${e.product.name} x${e.qty}`).join("%0A");
     if(!items) { alert("Tu carrito está vacío"); return; }
     const msg = `Hola!%0AQuiero hacer un pedido:%0A${items}%0A%0ATotal: ${document.getElementById("cartTotal").textContent}`;
