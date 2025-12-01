@@ -1,145 +1,255 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dulka Joyería</title>
-
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Dulka Joyería — Catálogo</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 <style>
-    body{
-        margin:0;
-        font-family: 'Poppins', sans-serif;
-        background:#ffffff;
-        color:#222;
-    }
+  :root{
+    --gold:#d4af37; --dark:#111; --muted:#666;
+    --card-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  }
+  body{font-family:'Poppins',sans-serif;margin:0;color:#222;background:#fff}
+  header{background:linear-gradient(180deg,#1964a0 0,#124e7e 100%);color:#fff;padding:48px 20px;text-align:center}
+  header h1{font-size:2.6rem;margin:0}
+  header p{opacity:.95;margin-top:8px}
 
-    /* ===== HERO ===== */
-    header{
-        background: rgb(25, 100, 160) center/cover no-repeat;
-        height:65vh;
-        display:flex;
-        flex-direction:column;
-        justify-content:center;
-        align-items:center;
-        text-align:center;
-        color:rgb(255, 255, 255);
-        padding:20px;
-    }
-    header h1{
-        font-size:5rem;
-        letter-spacing:2px;
-        margin:0;
-    }
-    header p{
-        font-size:1.8rem;
-        width:70%;
-        max-width:600px;
-    }
-    .btn-primary{
-        background:#d4af37;
-        padding:12px 26px;
-        margin-top:18px;
-        color:white;
-        border-radius:5px;
-        text-decoration:none;
-        font-weight:bold;
-        transition:.3s;
-        font-size:1.8rem;
-    }
-    .btn-primary:hover{ background:#b38c23; }
+  .topbar{display:flex;gap:12px;align-items:center;justify-content:center;margin:18px;}
+  .search{flex:1;max-width:520px;display:flex;gap:8px}
+  .search input{flex:1;padding:10px 12px;border-radius:10px;border:1px solid #eee}
+  .filters{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:18px}
 
-    /* ===== LOGOS ===== */
-    .logos{
-        display:flex;
-        justify-content:center;
-        gap:50px;
-        padding:50px 20px;
-        flex-wrap:wrap;
-    }
-    .logos img{
-        width:160px;
-        filter:drop-shadow(1px 1px 6px rgba(0,0,0,.1));
-    }
+  .catalogo{padding:32px 20px}
+  .controls{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
 
-    /* ===== CATALOGO ===== */
-    .catalogo{
-        text-align:center;
-        padding:60px 20px;
-    }
-    .grid{
-        display:grid;
-        grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-        gap:22px;
-        width:90%;
-        max-width:1200px;
-        margin:auto;
-    }
-    .producto{
-        background:white;
-        border-radius:12px;
-        padding:15px;
-        box-shadow:0 3px 8px rgba(0,0,0,.08);
-        transition:.3s;
-    }
-    .producto:hover{ transform:translateY(-5px); }
-    .producto img{
-        width:100%;
-        border-radius:10px;
-    }
-    .producto h3{ margin:10px 0; font-weight:500; }
-    .producto p{ font-size:.9rem; color:#555; }
-    .precio{ font-size:1rem; font-weight:bold; color:#d4af37; }
+  .card{background:#fff;border-radius:12px;padding:12px;box-shadow:var(--card-shadow);transition:transform .18s}
+  .card:hover{transform:translateY(-6px)}
+  .card img{width:100%;height:180px;object-fit:cover;border-radius:8px}
+  .card h3{margin:10px 0 6px;font-size:1rem}
+  .card p{margin:0;color:var(--muted);font-size:.9rem}
+  .price{color:var(--gold);font-weight:700;margin-top:8px}
+  .actions{display:flex;gap:8px;margin-top:10px;align-items:center}
+  .btn{background:var(--gold);color:#fff;padding:8px 12px;border-radius:8px;border:0;cursor:pointer}
+  .btn-outline{background:#fff;border:1px solid #ddd;padding:8px 10px;border-radius:8px;cursor:pointer}
+  .stock-low{color:#d9534f;font-weight:700}
+  .badge{background:#f5f5f5;padding:6px 8px;border-radius:999px;font-size:.8rem}
 
-    /* ===== FOOTER ===== */
-    footer{
-        background:#111;
-        color:#fff;
-        text-align:center;
-        padding:25px;
-        margin-top:40px;
-    }
+  /* CART */
+  .cart-panel{position:fixed;right:18px;bottom:18px;background:#fff;border-radius:12px;padding:12px;box-shadow:0 10px 30px rgba(0,0,0,0.12);width:320px;max-height:70vh;overflow:auto}
+  .cart-item{display:flex;gap:8px;align-items:center;border-bottom:1px solid #eee;padding:8px 0}
+  .cart-item img{width:46px;height:46px;object-fit:cover;border-radius:6px}
+  .cart-footer{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+
+  @media (max-width:600px){
+    header h1{font-size:1.8rem}
+    .card img{height:140px}
+    .cart-panel{width:90%;left:5%;right:5%}
+  }
 </style>
 </head>
-
 <body>
 
 <header>
-    <h1>Dulka Moda</h1>
-    <p>Eleva tu brillo. Cada pieza cuenta una historia.</p>
-    <a href="#catalogo" class="btn-primary">Ver Catálogo</a>
+  <h1>Dulka Moda</h1>
+  <p>Eleva tu brillo. Compra fácil desde tu celular.</p>
 </header>
 
-<section class="logos">
-    <img src="logo/1LOGOS.JPG">
-    <img src="logo/2LOGOS.JPG">
-    <img src="logo/3LOGOS.JPG">
-</section>
+<!-- Controls: buscador + filtros -->
+<div class="topbar">
+  <div class="search">
+    <input id="searchInput" placeholder="Buscar producto, palabra clave o código...">
+    <button id="clearSearch" class="btn-outline">Limpiar</button>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <button id="openCart" class="btn">Carrito (<span id="cartCount">0</span>)</button>
+  </div>
+</div>
 
-<section id="catalogo" class="catalogo">
-    <h2>✨ Catálogo de Joyería</h2><br>
+<div class="catalogo">
+  <div class="controls">
+    <div class="filters" id="filters"></div>
+    <div class="badge" id="totalCount">Cargando...</div>
+  </div>
 
-    <!-- 📌 Inserta aquí tu HTML generado automáticamente -->
-    <div class="grid">
-        <!-- INCLUYE catalogo_generado.html -->
-        <!-- si abres local en navegador NO leerá con include, por seguridad -->
-        <!-- por eso se usa JavaScript para cargar contenido -->
-        <div id="contenido-catalogo"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- CART PANEL (hidden by default) -->
+<div id="cartPanel" class="cart-panel" style="display:none">
+  <h3>Tu pedido</h3>
+  <div id="cartItems"></div>
+  <div class="cart-footer">
+    <div><b>Total:</b> <span id="cartTotal">0</span></div>
+    <div style="display:flex;gap:8px">
+      <button id="clearCart" class="btn-outline">Vaciar</button>
+      <button id="checkout" class="btn">Pedir por WhatsApp</button>
     </div>
-</section>
+  </div>
+</div>
 
 <script>
-fetch("catalogo_generado.html")
-.then(response => response.text())
-.then(data => {
-    document.getElementById("contenido-catalogo").innerHTML = data;
-});
+(async function(){
+  // Rutas a los JSON generados por Python (ajusta si los pones en otra carpeta)
+  const CATALOG_URL = "output/catalogo.json";
+  const INVENTORY_URL = "output/inventario_actual.json";
+
+  // Cargar datos
+  const [catalogoResp, invResp] = await Promise.all([fetch(CATALOG_URL), fetch(INVENTORY_URL)]);
+  const catalog = await catalogoResp.json();
+  const inventory = await invResp.json();
+  // Map de inventario por productCode
+  const invMap = {};
+  inventory.forEach(i => invMap[i.productCode] = i.inventory);
+
+  // Inicialmente, añadimos inventory actual a cada producto (no modificamos JSON)
+  catalog.forEach(p => { p.inventory = invMap[p.productCode] ?? p.inventory ?? p.qty_initial ?? 0; });
+
+  // UI refs
+  const grid = document.getElementById("grid");
+  const filtersDiv = document.getElementById("filters");
+  const totalCount = document.getElementById("totalCount");
+  const searchInput = document.getElementById("searchInput");
+  const clearSearch = document.getElementById("clearSearch");
+
+  // Build category filters
+  const categories = [...new Set(catalog.map(i => (i.category||"Sin categoría").trim()))];
+  categories.unshift("Todos");
+  categories.forEach(cat => {
+    const btn = document.createElement("button");
+    btn.textContent = cat;
+    btn.className = "btn-outline";
+    btn.onclick = () => { activeCategory = cat; render(); };
+    filtersDiv.appendChild(btn);
+  });
+
+  // Search & category state
+  let activeCategory = "Todos";
+  let query = "";
+  searchInput.addEventListener("input", (e) => { query = e.target.value.trim().toLowerCase(); render(); });
+  clearSearch.addEventListener("click", () => { searchInput.value=""; query=""; render(); });
+
+  // CART (localStorage)
+  let cart = JSON.parse(localStorage.getItem("dulka_cart")||"{}");
+  function saveCart(){ localStorage.setItem("dulka_cart", JSON.stringify(cart)); updateCartUI(); }
+
+  function addToCart(prod){
+    if((prod.inventory||0) <= 0) { alert("Sin stock disponible"); return; }
+    const code = prod.productCode;
+    cart[code] = cart[code] || { product: prod, qty:0 };
+    if(cart[code].qty + 1 > prod.inventory){ alert("No hay suficiente inventario"); return; }
+    cart[code].qty += 1;
+    saveCart();
+  }
+
+  function removeFromCart(code){
+    delete cart[code]; saveCart();
+  }
+
+  // Render products
+  function render(){
+    grid.innerHTML = "";
+    const filtered = catalog.filter(p=>{
+      const inCat = (activeCategory==="Todos") || ((p.category||"Sin categoría") === activeCategory);
+      const matchesQ = !query || (p.name && p.name.toLowerCase().includes(query)) || (p.description && p.description.toLowerCase().includes(query)) || (p.productCode && p.productCode.toLowerCase().includes(query));
+      return inCat && matchesQ;
+    });
+
+    totalCount.textContent = `${filtered.length} productos`;
+    filtered.forEach(p=>{
+      const card = document.createElement("div"); card.className="card";
+      const imgSrc = p.image && p.image.length ? p.image : (p.image || "Imagen/placeholder.png");
+      card.innerHTML = `
+        <img src="${imgSrc}" onerror="this.src='Imagen/placeholder.png'">
+        <h3>${p.productCode} — ${p.name}</h3>
+        <p>${p.description || ""}</p>
+        <div class="price">${p.price ? "$"+p.price.toFixed(2)+" MXN" : ""}</div>
+        <div class="actions">
+          <div style="flex:1">${p.inventory <= 5 ? '<span class="stock-low">¡Pocas! '+p.inventory+'</span>' : '<span class="badge">Disponible: '+p.inventory+'</span>'}</div>
+          <div>
+            <button class="btn" onclick='(function(){ addToCartByCode("${p.productCode}") })()'>Agregar</button>
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  // helper so onclick string calls work
+  window.addToCartByCode = function(code){
+    const p = catalog.find(x=>x.productCode===code);
+    if(p) { addToCart(p); render(); }
+  }
+
+  // CART UI and behaviors
+  const cartPanel = document.getElementById("cartPanel");
+  const cartItems = document.getElementById("cartItems");
+  const cartTotal = document.getElementById("cartTotal");
+  const cartCount = document.getElementById("cartCount");
+  document.getElementById("openCart").onclick = () => { cartPanel.style.display = cartPanel.style.display==="none"?"block":"none"; updateCartUI(); };
+
+  function updateCartUI(){
+    cartItems.innerHTML = "";
+    let total = 0, count = 0;
+    Object.entries(cart).forEach(([code, entry])=>{
+      const p = entry.product;
+      const qty = entry.qty;
+      const price = p.price || 0;
+      const sub = price * qty;
+      total += sub; count += qty;
+      const div = document.createElement("div"); div.className="cart-item";
+      div.innerHTML = `
+        <img src="${p.image || 'Imagen/placeholder.png'}" onerror="this.src='Imagen/placeholder.png'">
+        <div style="flex:1">
+          <div><b>${p.name}</b></div>
+          <div style="font-size:.9rem;color:#666">x ${qty} • ${price?("$"+price):""}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <button class="btn-outline" onclick='(function(){decrease("${code}")})()'>-</button>
+          <button class="btn" onclick='(function(){increase("${code}")})()'>+</button>
+          <button class="btn-outline" onclick='(function(){remove("${code}")})()'>Quitar</button>
+        </div>
+      `;
+      cartItems.appendChild(div);
+    });
+    cartTotal.textContent = "$"+(total.toFixed?total.toFixed(2):total)+" MXN";
+    cartCount.textContent = count;
+    localStorage.setItem("dulka_cart_count", count);
+  }
+
+  window.decrease = function(code){
+    if(!cart[code]) return;
+    cart[code].qty--;
+    if(cart[code].qty<=0) delete cart[code];
+    saveCart();
+  }
+  window.increase = function(code){
+    const p = catalog.find(x=>x.productCode===code);
+    if(!p) return;
+    cart[code].qty++;
+    if(cart[code].qty > p.inventory){ alert("No hay suficiente inventario"); cart[code].qty = p.inventory; }
+    saveCart();
+  }
+  window.remove = function(code){ removeFromCart(code); render(); }
+
+  document.getElementById("clearCart").onclick = () => { if(confirm("Vaciar carrito?")){ cart={}; saveCart(); } }
+
+  // Checkout via WhatsApp: compone mensaje con items
+  document.getElementById("checkout").onclick = () => {
+    const phone = "5216622571346"; // pon aquí tu número con lada (521 = México + número)
+    const items = Object.values(cart).map(e => `${e.product.name} x${e.qty}`).join("%0A");
+    if(!items) { alert("Tu carrito está vacío"); return; }
+    const msg = `Hola!%0AQuiero hacer un pedido:%0A${items}%0A%0ATotal: ${document.getElementById("cartTotal").textContent}`;
+    const url = `https://wa.me/${phone}?text=${msg}`;
+    window.open(url, "_blank");
+  }
+
+  // initial render
+  render();
+  updateCartUI();
+
+})();
 </script>
-
-
-
-<footer>
-    © 2025 Dulka Joyería — Elegancia accesible  
-</footer>
-
 </body>
 </html>
