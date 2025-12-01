@@ -9,29 +9,29 @@
     body{
         margin:0;
         font-family: 'Poppins', sans-serif;
-        background:#fafafa;
+        background:#ffffff;
         color:#222;
     }
 
     /* ===== HERO ===== */
     header{
-        background:url("TU_IMAGEN_DE_PORTADA.jpg") center/cover no-repeat;
+        background: rgb(25, 100, 160) center/cover no-repeat;
         height:65vh;
         display:flex;
         flex-direction:column;
         justify-content:center;
         align-items:center;
         text-align:center;
-        color:white;
+        color:rgb(255, 255, 255);
         padding:20px;
     }
     header h1{
-        font-size:3rem;
+        font-size:5rem;
         letter-spacing:2px;
         margin:0;
     }
     header p{
-        font-size:1.2rem;
+        font-size:1.8rem;
         width:70%;
         max-width:600px;
     }
@@ -44,6 +44,7 @@
         text-decoration:none;
         font-weight:bold;
         transition:.3s;
+        font-size:1.8rem;
     }
     .btn-primary:hover{ background:#b38c23; }
 
@@ -103,45 +104,38 @@
 <body>
 
 <header>
-    <h1>Dulka</h1>
+    <h1>Dulka Moda</h1>
     <p>Eleva tu brillo. Cada pieza cuenta una historia.</p>
     <a href="#catalogo" class="btn-primary">Ver Catálogo</a>
 </header>
 
 <section class="logos">
-    <img src="LOGO1.png">
-    <img src="LOGO2.png">
-    <img src="LOGO3.png">
+    <img src="logo/1LOGOS.JPG">
+    <img src="logo/2LOGOS.JPG">
+    <img src="logo/3LOGOS.JPG">
 </section>
 
 <section id="catalogo" class="catalogo">
     <h2>✨ Catálogo de Joyería</h2><br>
 
+    <!-- 📌 Inserta aquí tu HTML generado automáticamente -->
     <div class="grid">
-
-        <div class="producto">
-            <img src="producto1.jpg">
-            <h3>Collar Luna Minimalista</h3>
-            <p>Acero inoxidable | Baño de oro</p>
-            <span class="precio">$280 MXN</span>
-        </div>
-
-        <div class="producto">
-            <img src="producto2.jpg">
-            <h3>Aros Dorados Clásicos</h3>
-            <p>Todoterreno — ideal para diario</p>
-            <span class="precio">$240 MXN</span>
-        </div>
-
-        <div class="producto">
-            <img src="producto3.jpg">
-            <h3>Pulsera Infinity</h3>
-            <p>Significa unión y eternidad</p>
-            <span class="precio">$350 MXN</span>
-        </div>
-
+        <!-- INCLUYE catalogo_generado.html -->
+        <!-- si abres local en navegador NO leerá con include, por seguridad -->
+        <!-- por eso se usa JavaScript para cargar contenido -->
+        <div id="contenido-catalogo"></div>
     </div>
 </section>
+
+<script>
+fetch("catalogo_generado.html")
+.then(response => response.text())
+.then(data => {
+    document.getElementById("contenido-catalogo").innerHTML = data;
+});
+</script>
+
+
 
 <footer>
     © 2025 Dulka Joyería — Elegancia accesible  
