@@ -104,7 +104,10 @@
   inventory.forEach(i => invMap[i.productCode] = i.inventory);
 
   // Inicialmente, añadimos inventory actual a cada producto (no modificamos JSON)
-  catalog.forEach(p => { p.inventory = invMap[p.productCode] ?? p.inventory ?? p.qty_initial ?? 0; });
+  catalog.forEach(p => {
+    p.inventory = invMap[p.productCode] ?? p.inventory ?? p.qty_initial ?? 0
+    p.price = Number(p.price) || 0;  // 🔥 ahora Precio del Excel se usa sí o sí
+     });
 
   // UI refs
   const grid = document.getElementById("grid");
@@ -190,33 +193,39 @@
   document.getElementById("openCart").onclick = () => { cartPanel.style.display = cartPanel.style.display==="none"?"block":"none"; updateCartUI(); };
 
   function updateCartUI(){
-    cartItems.innerHTML = "";
-    let total = 0, count = 0;
-    Object.entries(cart).forEach(([code, entry])=>{
-      const p = entry.product;
-      const qty = entry.qty;
-      const price = p.price || 0;
-      const sub = price * qty;
-      total += sub; count += qty;
-      const div = document.createElement("div"); div.className="cart-item";
-      div.innerHTML = `
-        <img src="${p.image || 'Imagen/placeholder.png'}" onerror="this.src='Imagen/placeholder.png'">
-        <div style="flex:1">
-          <div><b>${p.name}</b></div>
-          <div style="font-size:.9rem;color:#666">x ${qty} • ${price?("$"+price):""}</div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:4px">
-          <button class="btn-outline" onclick='(function(){decrease("${code}")})()'>-</button>
-          <button class="btn" onclick='(function(){increase("${code}")})()'>+</button>
-          <button class="btn-outline" onclick='(function(){remove("${code}")})()'>Quitar</button>
-        </div>
-      `;
-      cartItems.appendChild(div);
-    });
-    cartTotal.textContent = "$"+(total.toFixed?total.toFixed(2):total)+" MXN";
-    cartCount.textContent = count;
-    localStorage.setItem("dulka_cart_count", count);
-  }
+  cartItems.innerHTML = "";
+  let total = 0, count = 0;
+
+  Object.entries(cart).forEach(([code, entry])=>{
+    const p = entry.product;
+    const qty = entry.qty;
+    const price = Number(p.price) || 0;
+    const sub = price * qty;
+    total += sub;
+    count += qty;
+
+    const div = document.createElement("div");
+    div.className="cart-item";
+    div.innerHTML = `
+      <img src="${p.image || 'Imagen/placeholder.png'}">
+      <div style="flex:1">
+        <b>${p.name}</b><br>
+        <small>x${qty} • $${price.toFixed(2)} c/u</small><br>
+        <b style="color:var(--gold)">Subtotal: $${sub.toFixed(2)}</b>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:5px">
+        <button class="btn-outline" onclick='decrease("${code}")'>-</button>
+        <button class="btn" onclick='increase("${code}")'>+</button>
+        <button class="btn-outline" onclick='remove("${code}")'>Quitar</button>
+      </div>
+    `;
+    cartItems.appendChild(div);
+  });
+
+  cartTotal.innerHTML = `$${total.toFixed(2)} MXN`; // 🔥 suma total corregida
+  cartCount.textContent = count;
+}
+
 
   window.decrease = function(code){
     if(!cart[code]) return;
@@ -237,7 +246,7 @@
 
   // Checkout via WhatsApp: compone mensaje con items
   document.getElementById("checkout").onclick = () => {
-    const phone = "5216622571346"; // pon aquí tu número con lada (521 = México + número)
+    const phone = "5216623187789"; // pon aquí tu número con lada (521 = México + número)
     const items = Object.values(cart).map(e => `${e.product.name} x${e.qty}`).join("%0A");
     if(!items) { alert("Tu carrito está vacío"); return; }
     const msg = `Hola!%0AQuiero hacer un pedido:%0A${items}%0A%0ATotal: ${document.getElementById("cartTotal").textContent}`;
