@@ -143,6 +143,7 @@
     cart[code] = cart[code] || { product: prod, qty:0 };
     if(cart[code].qty + 1 > prod.inventory){ alert("No hay suficiente inventario"); return; }
     cart[code].qty += 1;
+    console.debug('addToCart ->', code, cart[code]);
     saveCart();
   }
 
@@ -190,7 +191,13 @@
   const cartItems = document.getElementById("cartItems");
   const cartTotal = document.getElementById("cartTotal");
   const cartCount = document.getElementById("cartCount");
-  document.getElementById("openCart").onclick = () => { cartPanel.style.display = cartPanel.style.display==="none"?"block":"none"; updateCartUI(); };
+  document.getElementById("openCart").onclick = () => {
+    updateCartUI();
+    const w = 480, h = 720;
+    const left = (screen.width/2)-(w/2);
+    const top = (screen.height/2)-(h/2);
+    window.open('cart.html','Carrito',`width=${w},height=${h},left=${left},top=${top},resizable=yes`);
+  };
 
   function updateCartUI(){
   cartItems.innerHTML = "";
@@ -247,9 +254,14 @@
   // Checkout via WhatsApp: compone mensaje con items
   document.getElementById("checkout").onclick = () => {
     const phone = "5216622571346"; // pon aquí tu número con lada (521 = México + número)
-    const items = Object.values(cart).map(e => `${e.product.name} x${e.qty}`).join("%0A");
-    if(!items) { alert("Tu carrito está vacío"); return; }
-    const msg = `Hola!%0AQuiero hacer un pedido:%0A${items}%0A%0ATotal: ${document.getElementById("cartTotal").textContent}`;
+    const entries = Object.values(cart);
+    if(!entries.length) { alert("Tu carrito está vacío"); return; }
+    const totalItems = entries.reduce((s,e)=>s+e.qty,0);
+    const lines = entries.map(e => `Código: ${e.product.productCode} | ${e.product.name} | Cant:${e.qty} | $${(Number(e.product.price)||0).toFixed(2)}`);
+    lines.push('');
+    lines.push(`Total items: ${totalItems}`);
+    lines.push(`Total: ${document.getElementById("cartTotal").textContent}`);
+    const msg = encodeURIComponent(['Hola!','Quiero hacer un pedido:','',...lines].join('\n'));
     const url = `https://wa.me/${phone}?text=${msg}`;
     window.open(url, "_blank");
   }

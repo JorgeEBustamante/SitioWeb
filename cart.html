@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Carrito — Dulka</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+  body{font-family:'Poppins',sans-serif;margin:0;color:#222;background:#fafafa}
+  header{background:#124e7e;color:#fff;padding:14px 18px;display:flex;align-items:center;justify-content:space-between}
+  header h2{margin:0;font-size:1.1rem}
+  .container{padding:18px}
+  .item{display:flex;gap:12px;align-items:center;padding:12px;border-radius:10px;background:#fff;margin-bottom:10px;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
+  .item img{width:72px;height:72px;object-fit:cover;border-radius:8px}
+  .meta{flex:1}
+  .meta b{display:block}
+  .meta small{color:#666}
+  .controls{display:flex;gap:8px;align-items:center}
+  .btn{background:#d4af37;color:#fff;padding:8px 12px;border-radius:8px;border:0;cursor:pointer}
+  .btn-outline{background:#fff;border:1px solid #ddd;padding:8px 10px;border-radius:8px;cursor:pointer}
+  .totals{background:#fff;padding:12px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.06);margin-top:12px}
+  .empty{padding:20px;text-align:center;color:#666}
+</style>
+</head>
+<body>
+<header>
+  <h2>Tu carrito</h2>
+  <div style="display:flex;gap:8px;align-items:center">
+    <button id="closeBtn" class="btn-outline">Cerrar</button>
+    <button id="clearBtn" class="btn-outline">Vaciar</button>
+  </div>
+</header>
+<div class="container">
+  <div id="items"></div>
+  <div id="empty" class="empty" style="display:none">No hay productos en el carrito.</div>
+  <div class="totals">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div><b id="totalItems">0</b> artículos</div>
+        <small id="totalUnique">0 productos diferentes</small>
+      </div>
+      <div style="text-align:right">
+        <div><b id="totalPrice">$0.00 MXN</b></div>
+        <div style="margin-top:8px;display:flex;gap:8px;justify-content:flex-end">
+          <button id="checkoutBtn" class="btn">Pedir por WhatsApp</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  const KEY = 'dulka_cart';
+  const itemsNode = document.getElementById('items');
+  const emptyNode = document.getElementById('empty');
+  const totalItemsNode = document.getElementById('totalItems');
+  const totalUniqueNode = document.getElementById('totalUnique');
+  const totalPriceNode = document.getElementById('totalPrice');
+  const checkoutBtn = document.getElementById('checkoutBtn');
+  const closeBtn = document.getElementById('closeBtn');
+  const clearBtn = document.getElementById('clearBtn');
+
+  function loadCart(){ try{ return JSON.parse(localStorage.getItem(KEY) || '{}'); }catch(e){ return {}; } }
+  function saveCart(cart){ localStorage.setItem(KEY, JSON.stringify(cart)); window.dispatchEvent(new Event('storage')); }
+
+  function render(){
+    const cart = loadCart();
+    const entries = Object.entries(cart);
+    itemsNode.innerHTML = '';
+    if(!entries.length){
+      emptyNode.style.display='block';
+      totalItemsNode.textContent='0';
+      totalUniqueNode.textContent='0 productos diferentes';
+      totalPriceNode.textContent='$0.00 MXN';
+      return;
+    }
+    emptyNode.style.display='none';
+    let total = 0, totalQty = 0;
+    entries.forEach(([code, e])=>{
+      const p = e.product; const qty = e.qty;
+      const price = Number(p.price)||0; const sub = price*qty; total += sub; totalQty += qty;
+      const div = document.createElement('div'); div.className='item';
+      div.innerHTML = `
+        <img src="${p.image||'Imagen/placeholder.png'}" onerror="this.src='Imagen/placeholder.png'">
+        <div class="meta">
+          <b>${p.name}</b>
+          <small>Código: ${p.productCode} • $${price.toFixed(2)} c/u • Disponible: ${p.inventory||0}</small>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+          <div class="controls">
+            <button class="btn-outline" data-act="dec" data-code="${code}">-</button>
+            <div style="min-width:30px;text-align:center">${qty}</div>
+            <button class="btn" data-act="inc" data-code="${code}">+</button>
+          </div>
+          <div style="margin-top:6px">Subtotal: <b>$${sub.toFixed(2)}</b></div>
+          <div><button class="btn-outline" data-act="rem" data-code="${code}">Quitar</button></div>
+        </div>
+      `;
+      itemsNode.appendChild(div);
+    });
+    totalItemsNode.textContent = totalQty;
+    totalUniqueNode.textContent = entries.length + (entries.length===1? ' producto' : ' productos');
+    totalPriceNode.textContent = '$' + total.toFixed(2) + ' MXN';
+  }
+
+  function changeQty(code, delta){
+    const cart = loadCart(); if(!cart[code]) return;
+    cart[code].qty += delta;
+    if(cart[code].qty <= 0) delete cart[code];
+    if(cart[code] && cart[code].qty > (cart[code].product.inventory||9999)) cart[code].qty = cart[code].product.inventory||cart[code].qty;
+    saveCart(cart); render();
+  }
+  function removeItem(code){ const cart = loadCart(); delete cart[code]; saveCart(cart); render(); }
+  function clearCart(){ if(!confirm('Vaciar carrito?')) return; localStorage.removeItem(KEY); window.dispatchEvent(new Event('storage')); render(); }
+
+  itemsNode.addEventListener('click', (e)=>{
+    const btn = e.target.closest('button'); if(!btn) return; const act = btn.dataset.act; const code = btn.dataset.code; if(!act) return;
+    if(act==='dec') changeQty(code, -1);
+    if(act==='inc') changeQty(code, +1);
+    if(act==='rem') removeItem(code);
+  });
+
+  checkoutBtn.addEventListener('click', ()=>{
+    const phone = '5216622571346';
+    const cart = loadCart(); const entries = Object.values(cart);
+    if(!entries.length){ alert('El carrito está vacío'); return; }
+    const totalItems = entries.reduce((s,e)=>s+e.qty,0);
+    const lines = entries.map(e => `Código: ${e.product.productCode} | ${e.product.name} | Cant:${e.qty} | $${(Number(e.product.price)||0).toFixed(2)}`);
+    lines.push(''); lines.push(`Total items: ${totalItems}`); lines.push(`Total: ${totalPriceNode.textContent}`);
+    const msg = encodeURIComponent(['Hola!','Quisiera hacer un pedido:','',...lines].join('\n'));
+    const url = `https://wa.me/${phone}?text=${msg}`;
+    window.open(url, '_blank');
+  });
+
+  closeBtn.addEventListener('click', ()=> window.close());
+  clearBtn.addEventListener('click', clearCart);
+
+  // react to storage so index.html updates and viceversa
+  window.addEventListener('storage', ()=> render());
+
+  render();
+})();
+</script>
+</body>
+</html>
